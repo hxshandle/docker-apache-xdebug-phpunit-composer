@@ -22,7 +22,8 @@ RUN apk --no-cache add php5 \
 	php5-gd \
 	php5-xml \
 	php5-dom \
-    apache2 \
+    php5-apache2 \
+	php5-soap \
     supervisor \
     curl
 
@@ -32,16 +33,13 @@ RUN mkdir -p /run/apache2
 #Edit apache config
 RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2/httpd.conf && \
     sed -i 's#AllowOverride [Nn]one#AllowOverride All#' /etc/apache2/httpd.conf && \
-    #sed -i 's#^ServerRoot .*#ServerRoot "/etc/apache2"#g'  /etc/apache2/httpd.conf && \
     sed -i 's/^#ServerName.*/ServerName webproxy/' /etc/apache2/httpd.conf && \
-    #sed -i 's#^IncludeOptional /etc/apache2/conf#IncludeOptional /var/www/config/conf#g' /etc/apache2/httpd.conf && \
     sed -i 's#PidFile "/run/.*#Pidfile "/var/www/run/httpd.pid"#g'  /etc/apache2/conf.d/mpm.conf && \
     sed -i 's#Directory "/var/www/localhost/htdocs.*#Directory "/var/www/html" >#g' /etc/apache2/httpd.conf && \
     sed -i 's#Directory "/var/www/localhost/cgi-bin.*#Directory "/var/www/cgi-bin" >#g' /etc/apache2/httpd.conf && \
+	sed -i 's#ErrorLog logs/error.log #ErrorLog /dev/stderr#g' /etc/apache2/httpd.conf && \
     mkdir -p /var/www/html/web && \
-    echo "Hello World" >> /var/www/html/web/index.html
-#ADD /config/apache.conf /etc/apache2/conf.d/apache.conf
-
+    echo "<?php echo 'Hello World from PHP'; ?>" >> /var/www/html/web/index.php
 
 RUN chown -R apache.www-data /var/www
 
