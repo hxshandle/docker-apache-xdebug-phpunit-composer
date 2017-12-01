@@ -34,6 +34,7 @@ RUN mkdir -p /run/apache2
 RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2/httpd.conf && \
     sed -i 's#AllowOverride [Nn]one#AllowOverride All#' /etc/apache2/httpd.conf && \
     sed -i 's/^#ServerName.*/ServerName webproxy/' /etc/apache2/httpd.conf && \
+	sed -i 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache2/httpd.conf && \
     sed -i 's#PidFile "/run/.*#Pidfile "/var/www/run/httpd.pid"#g'  /etc/apache2/conf.d/mpm.conf && \
     sed -i 's#Directory "/var/www/localhost/htdocs.*#Directory "/var/www/html" >#g' /etc/apache2/httpd.conf && \
     sed -i 's#Directory "/var/www/localhost/cgi-bin.*#Directory "/var/www/cgi-bin" >#g' /etc/apache2/httpd.conf && \
