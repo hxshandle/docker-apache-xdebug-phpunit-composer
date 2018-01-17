@@ -77,7 +77,7 @@ RUN cd /tmp && wget http://xdebug.org/files/xdebug-2.5.5.tgz \
     && tar -zxvf xdebug-2.5.5.tgz \
     && cd xdebug-2.5.5 && phpize \
     && ./configure --enable-xdebug && make && make install \
-    && echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" > /etc/php5/php.ini \
+    && echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php5/php.ini \
     && echo "xdebug.remote_enable=on" >> /etc/php5/php.ini \
     && echo "xdebug.remote_handler=dbgp" >> /etc/php5/php.ini \
     && echo "xdebug.remote_connect_back=1" >> /etc/php5/php.ini \
