@@ -1,2 +1,2 @@
-# docker-apache-symfony
-Docker base image optimized for Symfony running apach2, php5 or php7 with composer 
+# docker-apache-xdebug-phpunit-composer
+Docker base image optimized for Symfony running apache2, php5.6 with composer, phpunit and xdebug

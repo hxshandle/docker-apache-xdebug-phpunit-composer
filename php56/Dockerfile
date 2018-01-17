@@ -1,7 +1,7 @@
 FROM alpine:3.5
 
 LABEL Maintainer="Jan Ritter <git@janrtr.de>" \
-      Description="Docker base image optimized for Symfony running apache2 and php5 with composer"
+      Description="Docker base image optimized for Symfony running apache2, php5.6 with composer, phpunit and xdebug"
 
 RUN apk --no-cache add php5 \
     php5-common \
@@ -24,7 +24,24 @@ RUN apk --no-cache add php5 \
 	php5-dom \
     php5-apache2 \
 	php5-soap \
+	php5-dev \
+    php5-phar \
+    php5-cli
     supervisor \
+    autoconf \
+    gcc \
+    g++ \
+    zlib-dev \
+    file \
+    libc-dev  \
+    make pkgconf \
+    tar \
+    php5-pear \
+    tzdata \
+    libmemcached-dev \
+    git \
+    libmemcached \
+    openssl \
     curl
 
 # Apache2 required folder to write the pid
@@ -50,6 +67,24 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Add Composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-EXPOSE 80 443
+# Add phpunit
+RUN wget https://phar.phpunit.de/phpunit.phar
+RUN chmod +x phpunit.phar
+RUN mv phpunit.phar /usr/local/bin/phpunit
+
+# Add xdebug
+RUN cd /tmp && wget http://xdebug.org/files/xdebug-2.5.5.tgz \
+    && tar -zxvf xdebug-2.5.5.tgz \
+    && cd xdebug-2.5.5 && phpize \
+    && ./configure --enable-xdebug && make && make install \
+    && echo "zend_extension=$(find /usr/lib/php/modules/ -name xdebug.so)" > /etc/php5/php.ini \
+    && echo "xdebug.remote_enable=on" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_handler=dbgp" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_connect_back=1" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_autostart=on" >> /etc/php5/php.ini \
+    && echo "xdebug.idekey=\"PHPSTORM\"" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_port=9000" >> /etc/php5/php.ini
+
+EXPOSE 80 443 9000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
