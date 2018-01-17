@@ -26,7 +26,7 @@ RUN apk --no-cache add php5 \
 	php5-soap \
 	php5-dev \
     php5-phar \
-    php5-cli
+    php5-cli \
     supervisor \
     autoconf \
     gcc \
