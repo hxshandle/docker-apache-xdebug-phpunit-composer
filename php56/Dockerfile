@@ -9,26 +9,26 @@ RUN apk --no-cache add apache2 \
     openssl \
     php \
     php5-common \
-	php5-fpm \
-	php5-phar \
-	php5-pdo \
-	php5-json \
-	php5-openssl \
-	php5-mysql \
-	php5-pdo_mysql \
-	php5-mcrypt \
-	php5-opcache \
-	php5-sqlite3 \
-	php5-pdo_sqlite \
-	php5-ctype \
-	php5-zlib \
-	php5-curl \
-	php5-gd \
-	php5-xml \
-	php5-dom \
+	  php5-fpm \
+	  php5-phar \
+	  php5-pdo \
+	  php5-json \
     php5-openssl \
-	php5-soap \
-	php5-dev \
+    php5-mysql \
+    php5-pdo_mysql \
+    php5-mcrypt \
+    php5-opcache \
+    php5-sqlite3 \
+    php5-pdo_sqlite \
+    php5-ctype \
+    php5-zlib \
+    php5-curl \
+    php5-gd \
+    php5-xml \
+    php5-dom \
+    php5-openssl \
+    php5-soap \
+    php5-dev \
     php5-phar \
     php5-cli \
     supervisor \
@@ -67,10 +67,7 @@ RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2
     mkdir -p /var/www/html/web && \
     echo "<?php echo 'Hello World from PHP'; ?>" >> /var/www/html/web/index.php
 
-#Edit ssl config
-RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2/conf.d/ssl.conf
-
-#RUN chown -R apache.apache /var/www
+RUN chown -R apache.www-data /var/www
 
 #Symlink php5 to php
 RUN ln -s /usr/bin/php5 /usr/bin/php
