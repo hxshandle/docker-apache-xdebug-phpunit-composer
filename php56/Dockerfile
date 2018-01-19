@@ -1,33 +1,42 @@
-FROM alpine:3.5
+FROM alpine:3.6
 
 LABEL Maintainer="Jan Ritter <git@janrtr.de>" \
       Description="Docker base image optimized for Symfony running apache2, php5.6 with composer, phpunit and xdebug"
 
-RUN apk --no-cache add php5 \
-    php5-common \
-	php5-fpm \
-	php5-phar \
-	php5-pdo \
-	php5-json \
-	php5-openssl \
-	php5-mysql \
-	php5-pdo_mysql \
-	php5-mcrypt \
-	php5-opcache \
-	php5-sqlite3 \
-	php5-pdo_sqlite \
-	php5-ctype \
-	php5-zlib \
-	php5-curl \
-	php5-gd \
-	php5-xml \
-	php5-dom \
+RUN apk --no-cache add apache2 \
+    apache2-ssl \
     php5-apache2 \
-	php5-soap \
-	php5-dev \
+    openssl \
+    php \
+    php5-common \
+	  php5-fpm \
+	  php5-phar \
+	  php5-pdo \
+	  php5-json \
+    php5-openssl \
+    php5-mysql \
+    php5-pdo_mysql \
+    php5-mcrypt \
+    php5-opcache \
+    php5-sqlite3 \
+    php5-pdo_sqlite \
+    php5-ctype \
+    php5-zlib \
+    php5-curl \
+    php5-gd \
+    php5-xml \
+    php5-dom \
+    php5-openssl \
+    php5-soap \
+    php5-dev \
     php5-phar \
     php5-cli \
     supervisor \
+    tar \
+    php5-pear \
+    tzdata \
+    git \
+    curl \
     autoconf \
     gcc \
     g++ \
@@ -36,7 +45,6 @@ RUN apk --no-cache add php5 \
     libc-dev  \
     make pkgconf \
     tar \
-    php5-pear \
     tzdata \
     libmemcached-dev \
     git \
@@ -61,6 +69,9 @@ RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2
 
 RUN chown -R apache.www-data /var/www
 
+#Symlink php5 to php
+RUN ln -s /usr/bin/php5 /usr/bin/php
+
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -72,12 +83,13 @@ RUN wget https://phar.phpunit.de/phpunit.phar
 RUN chmod +x phpunit.phar
 RUN mv phpunit.phar /usr/local/bin/phpunit
 
+#Fix pecl command error
+RUN sed -i "$ s|\-n||g" /usr/bin/pecl
+
+RUN pecl install xdebug
+
 # Add xdebug
-RUN cd /tmp && wget http://xdebug.org/files/xdebug-2.5.5.tgz \
-    && tar -zxvf xdebug-2.5.5.tgz \
-    && cd xdebug-2.5.5 && phpize \
-    && ./configure --enable-xdebug && make && make install \
-    && echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php5/php.ini \
+RUN echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php5/php.ini \
     && echo "xdebug.remote_enable=on" >> /etc/php5/php.ini \
     && echo "xdebug.remote_handler=dbgp" >> /etc/php5/php.ini \
     && echo "xdebug.remote_connect_back=1" >> /etc/php5/php.ini \
