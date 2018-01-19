@@ -1,50 +1,42 @@
-FROM alpine:3.3
+FROM alpine:3.5
 
 LABEL Maintainer="Jan Ritter <git@janrtr.de>" \
       Description="Docker base image optimized for Symfony running apache2, php5.6 with composer, phpunit and xdebug"
 
 RUN apk --no-cache add apache2 \
     apache2-ssl \
-    php-apache2 \
+    php5-apache2 \
     openssl \
     php \
-    php-common \
-	php-fpm \
-	php-phar \
-	php-pdo \
-	php-json \
-	php-openssl \
-	php-mysql \
-	php-pdo_mysql \
-	php-mcrypt \
-	php-opcache \
-	php-sqlite3 \
-	php-pdo_sqlite \
-	php-ctype \
-	php-zlib \
-	php-curl \
-	php-gd \
-	php-xml \
-	php-dom \
-    php-openssl \
-	php-soap \
-	php-dev \
-    php-phar \
-    php-cli \
+    php5-common \
+	php5-fpm \
+	php5-phar \
+	php5-pdo \
+	php5-json \
+	php5-openssl \
+	php5-mysql \
+	php5-pdo_mysql \
+	php5-mcrypt \
+	php5-opcache \
+	php5-sqlite3 \
+	php5-pdo_sqlite \
+	php5-ctype \
+	php5-zlib \
+	php5-curl \
+	php5-gd \
+	php5-xml \
+	php5-dom \
+    php5-openssl \
+	php5-soap \
+	php5-dev \
+    php5-phar \
+    php5-cli \
+    php5-xdebug \
     supervisor \
-    autoconf \
-    gcc \
-    g++ \
-    zlib-dev \
-    file \
-    libc-dev  \
-    make pkgconf \
     tar \
-    php-pear \
+    php5-pear \
     tzdata \
-    libmemcached-dev \
     git \
-    libmemcached \
     curl
 
 # Apache2 required folder to write the pid
@@ -79,17 +71,13 @@ RUN chmod +x phpunit.phar
 RUN mv phpunit.phar /usr/local/bin/phpunit
 
 # Add xdebug
-RUN cd /tmp && wget http://xdebug.org/files/xdebug-2.5.5.tgz \
-    && tar -zxvf xdebug-2.5.5.tgz \
-    && cd xdebug-2.5.5 && phpize \
-    && ./configure --enable-xdebug && make && make install \
-    && echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php/php.ini \
-    && echo "xdebug.remote_enable=on" >> /etc/php/php.ini \
-    && echo "xdebug.remote_handler=dbgp" >> /etc/php/php.ini \
-    && echo "xdebug.remote_connect_back=1" >> /etc/php/php.ini \
-    && echo "xdebug.remote_autostart=on" >> /etc/php/php.ini \
-    && echo "xdebug.idekey=\"PHPSTORM\"" >> /etc/php/php.ini \
-    && echo "xdebug.remote_port=9000" >> /etc/php/php.ini
+RUN echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_enable=on" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_handler=dbgp" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_connect_back=1" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_autostart=on" >> /etc/php5/php.ini \
+    && echo "xdebug.idekey=\"PHPSTORM\"" >> /etc/php5/php.ini \
+    && echo "xdebug.remote_port=9000" >> /etc/php5/php.ini
 
 EXPOSE 80 443 9000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
