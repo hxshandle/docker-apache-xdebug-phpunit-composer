@@ -36,6 +36,20 @@ RUN apk --no-cache add apache2 \
     php5-pear \
     tzdata \
     git \
+    curl \
+    autoconf \
+    gcc \
+    g++ \
+    zlib-dev \
+    file \
+    libc-dev  \
+    make pkgconf \
+    tar \
+    tzdata \
+    libmemcached-dev \
+    git \
+    libmemcached \
+    openssl \
     curl
 
 # Apache2 required folder to write the pid
@@ -71,6 +85,11 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 RUN wget https://phar.phpunit.de/phpunit.phar
 RUN chmod +x phpunit.phar
 RUN mv phpunit.phar /usr/local/bin/phpunit
+
+#Fix pecl command error
+RUN sed -i "$ s|\-n||g" /usr/bin/pecl
+
+RUN pecl install xdebug
 
 # Add xdebug
 RUN echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php5/php.ini \
