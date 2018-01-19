@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.6
 
 LABEL Maintainer="Jan Ritter <git@janrtr.de>" \
       Description="Docker base image optimized for Symfony running apache2, php5.6 with composer, phpunit and xdebug"
@@ -31,7 +31,6 @@ RUN apk --no-cache add apache2 \
 	php5-dev \
     php5-phar \
     php5-cli \
-    php5-xdebug \
     supervisor \
     tar \
     php5-pear \
@@ -58,6 +57,9 @@ RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2
 RUN sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html/web"#g' /etc/apache2/conf.d/ssl.conf
 
 #RUN chown -R apache.apache /var/www
+
+#Symlink php5 to php
+RUN ln -s /usr/bin/php5 /usr/bin/php
 
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
