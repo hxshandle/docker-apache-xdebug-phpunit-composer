@@ -80,7 +80,7 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 
 # Add phpunit
 RUN wget https://phar.phpunit.de/phpunit-5.7.9.phar
-RUN chmod +x phpunit.phar
+RUN mv phpunit-5.7.9.phar phpunit.phar && chmod +x phpunit.phar
 RUN mv phpunit.phar /usr/local/bin/phpunit
 
 #Fix pecl command error
