@@ -79,7 +79,7 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 # Add phpunit
-RUN wget https://phar.phpunit.de/phpunit.phar
+RUN wget https://phar.phpunit.de/phpunit-5.7.9.phar
 RUN chmod +x phpunit.phar
 RUN mv phpunit.phar /usr/local/bin/phpunit
 
