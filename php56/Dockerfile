@@ -86,7 +86,7 @@ RUN mv phpunit.phar /usr/local/bin/phpunit
 #Fix pecl command error
 RUN sed -i "$ s|\-n||g" /usr/bin/pecl
 
-RUN pecl install xdebug
+RUN pecl install xdebug-2.5.5
 
 # Add xdebug
 RUN echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc/php5/php.ini \
