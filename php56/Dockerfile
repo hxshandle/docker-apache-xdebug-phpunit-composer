@@ -96,7 +96,7 @@ RUN echo "zend_extension=$(find /usr/lib/php5/modules/ -name xdebug.so)" >> /etc
     && echo "xdebug.remote_autostart=on" >> /etc/php5/php.ini \
     && echo "xdebug.idekey=\"PHPSTORM\"" >> /etc/php5/php.ini \
     && echo "xdebug.remote_port=9000" >> /etc/php5/php.ini
-
+VOLUME /var/www/html/web
 EXPOSE 80 443 9000
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
